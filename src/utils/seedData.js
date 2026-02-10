@@ -112,6 +112,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(1, 16, 0),
     location: 'Prospect Park, Brooklyn',
     device: 'Apple Watch',
+    media: ['/highlights/victor-castillo-run.svg'],
   },
   {
     id: 'act-8',
