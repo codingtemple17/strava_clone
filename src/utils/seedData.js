@@ -69,6 +69,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(3, 18, 45),
     location: 'Manhattan, New York',
     device: 'Garmin fēnix 5X Plus',
+    media: ['/highlights/rene-jersey.png', '/highlights/rene-ice-1.png', '/highlights/rene-ice-2.png'],
   },
   {
     id: 'act-2',
@@ -295,6 +296,7 @@ export function seedData() {
   });
 
   const mediaByActivityId = {
+    'act-1': ['/highlights/rene-jersey.png', '/highlights/rene-ice-1.png', '/highlights/rene-ice-2.png'],
     'act-7': [
       '/highlights/ducks-images.jpg',
       '/highlights/victor-8364.jpg',
@@ -321,7 +323,14 @@ export function seedData() {
     if (isSameSet) return a;
 
     // For these seeded activities, keep media in sync even if localStorage already has data.
-    if (a.id === 'act-7' || a.id === 'act-10' || a.id === 'act-11' || a.id === 'act-12' || a.id === 'act-14') {
+    if (
+      a.id === 'act-1' ||
+      a.id === 'act-7' ||
+      a.id === 'act-10' ||
+      a.id === 'act-11' ||
+      a.id === 'act-12' ||
+      a.id === 'act-14'
+    ) {
       changedActivities = true;
       return { ...a, media };
     }
