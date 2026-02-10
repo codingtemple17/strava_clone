@@ -290,6 +290,7 @@ export function seedData() {
   });
 
   const mediaByActivityId = {
+    'act-7': ['/highlights/victor-castillo-run.svg'],
     'act-10': ['/highlights/juan-franco-1.png'],
     'act-11': ['/highlights/juan-franco-2.png'],
     'act-14': ['/highlights/juan-franco-3.png'],
