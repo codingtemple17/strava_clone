@@ -146,6 +146,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(3, 12, 30),
     location: 'Downtown Brooklyn',
     device: 'Apple Watch',
+    media: ['/highlights/juan-4779.jpg', '/highlights/victor-7641.jpg', '/highlights/victor-9901.jpg'],
   },
   // Juan Franco's activities
   {
@@ -302,6 +303,7 @@ export function seedData() {
       '/highlights/victor-8364.jpg',
       '/highlights/victor-7641.jpg',
     ],
+    'act-9': ['/highlights/juan-4779.jpg', '/highlights/victor-7641.jpg', '/highlights/victor-9901.jpg'],
     'act-12': ['/highlights/sarah-swimming-1.png'],
     'act-10': ['/highlights/juan-franco-1.png', '/highlights/juan-4779.jpg'],
     'act-11': ['/highlights/juan-franco-2.png', '/highlights/juan-4760.jpg'],
@@ -326,6 +328,7 @@ export function seedData() {
     if (
       a.id === 'act-1' ||
       a.id === 'act-7' ||
+      a.id === 'act-9' ||
       a.id === 'act-10' ||
       a.id === 'act-11' ||
       a.id === 'act-12' ||
