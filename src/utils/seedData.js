@@ -112,7 +112,11 @@ const ACTIVITIES = [
     timestamp: daysAgo(1, 16, 0),
     location: 'Prospect Park, Brooklyn',
     device: 'Apple Watch',
-    media: ['/highlights/ducks-images.jpg'],
+    media: [
+      '/highlights/ducks-images.jpg',
+      '/highlights/victor-8364.jpg',
+      '/highlights/victor-7641.jpg',
+    ],
   },
   {
     id: 'act-8',
@@ -290,7 +294,11 @@ export function seedData() {
   });
 
   const mediaByActivityId = {
-    'act-7': ['/highlights/ducks-images.jpg'],
+    'act-7': [
+      '/highlights/ducks-images.jpg',
+      '/highlights/victor-8364.jpg',
+      '/highlights/victor-7641.jpg',
+    ],
     'act-10': ['/highlights/juan-franco-1.png'],
     'act-11': ['/highlights/juan-franco-2.png'],
     'act-14': ['/highlights/juan-franco-3.png'],
@@ -306,12 +314,17 @@ export function seedData() {
     if (!media) return a;
     if (a.id === 'act-7') {
       const currentMedia = Array.isArray(a.media) ? a.media : [];
-      const needsUpgrade =
+      const hasLegacy =
         currentMedia.length === 0 ||
         currentMedia.some((src) => String(src).includes('victor-castillo-run.svg')) ||
         currentMedia.some((src) => String(src).includes('victor-castillo-run.png')) ||
-        currentMedia.some((src) => String(src).includes('ducks images.heic')) ||
-        currentMedia.some((src) => String(src).includes('ducks-images.jpg'));
+        currentMedia.some((src) => String(src).includes('ducks images.heic'));
+
+      const isSameSet =
+        currentMedia.length === media.length &&
+        currentMedia.every((src, i) => src === media[i]);
+
+      const needsUpgrade = hasLegacy || !isSameSet;
       if (!needsUpgrade) return a;
       changedActivities = true;
       return { ...a, media };
