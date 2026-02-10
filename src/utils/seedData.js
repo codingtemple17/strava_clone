@@ -112,7 +112,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(1, 16, 0),
     location: 'Prospect Park, Brooklyn',
     device: 'Apple Watch',
-    media: ['/highlights/victor-castillo-run.svg'],
+    media: ['/highlights/victor-castillo-run.png'],
   },
   {
     id: 'act-8',
@@ -290,7 +290,7 @@ export function seedData() {
   });
 
   const mediaByActivityId = {
-    'act-7': ['/highlights/victor-castillo-run.svg'],
+    'act-7': ['/highlights/victor-castillo-run.png'],
     'act-10': ['/highlights/juan-franco-1.png'],
     'act-11': ['/highlights/juan-franco-2.png'],
     'act-14': ['/highlights/juan-franco-3.png'],
@@ -304,6 +304,16 @@ export function seedData() {
   const migratedActivities = activitiesWithoutRemoved.map((a) => {
     const media = mediaByActivityId[a.id];
     if (!media) return a;
+    if (a.id === 'act-7') {
+      const currentMedia = Array.isArray(a.media) ? a.media : [];
+      const needsUpgrade =
+        currentMedia.length === 0 ||
+        currentMedia.some((src) => String(src).includes('victor-castillo-run.svg'));
+      if (!needsUpgrade) return a;
+      changedActivities = true;
+      return { ...a, media };
+    }
+
     if (Array.isArray(a.media) && a.media.length > 0) return a;
     changedActivities = true;
     return { ...a, media };

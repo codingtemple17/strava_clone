@@ -81,6 +81,13 @@ export default function ActivityCard({ activity, onSelectUser }) {
     onSelectUser?.(user);
   }
 
+  function handleMediaError(e) {
+    const img = e.currentTarget;
+    if (img?.dataset?.fallbackApplied) return;
+    img.dataset.fallbackApplied = '1';
+    img.src = '/highlights/activity-placeholder.svg';
+  }
+
   return (
     <div className="bg-white border-b border-strava-border">
       {/* Header: Avatar + User info + menu */}
@@ -138,6 +145,7 @@ export default function ActivityCard({ activity, onSelectUser }) {
                 src={src}
                 alt="Activity media"
                 loading="lazy"
+                onError={handleMediaError}
                 className="w-56 h-40 shrink-0 rounded-2xl object-cover border border-strava-border"
               />
             ))}
