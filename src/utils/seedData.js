@@ -160,7 +160,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(2, 10, 0),
     location: 'Hudson River Greenway, NYC',
     device: 'Garmin Edge 530',
-    media: ['/highlights/juan-franco-1.png'],
+    media: ['/highlights/juan-franco-1.png', '/highlights/juan-4779.jpg'],
   },
   {
     id: 'act-11',
@@ -175,7 +175,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(6, 8, 0),
     location: 'Harriman State Park, NY',
     device: 'Garmin Edge 530',
-    media: ['/highlights/juan-franco-2.png'],
+    media: ['/highlights/juan-franco-2.png', '/highlights/juan-4760.jpg'],
   },
   {
     id: 'act-14',
@@ -190,7 +190,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(9, 7, 15),
     location: 'Queens, New York',
     device: 'Apple Watch',
-    media: ['/highlights/juan-franco-3.png'],
+    media: ['/highlights/juan-franco-3.png', '/highlights/juan-3114.jpg'],
   },
   // Sarah Chen's activities
   {
@@ -301,9 +301,9 @@ export function seedData() {
       '/highlights/victor-7641.jpg',
     ],
     'act-12': ['/highlights/sarah-swimming-1.png'],
-    'act-10': ['/highlights/juan-franco-1.png'],
-    'act-11': ['/highlights/juan-franco-2.png'],
-    'act-14': ['/highlights/juan-franco-3.png'],
+    'act-10': ['/highlights/juan-franco-1.png', '/highlights/juan-4779.jpg'],
+    'act-11': ['/highlights/juan-franco-2.png', '/highlights/juan-4760.jpg'],
+    'act-14': ['/highlights/juan-franco-3.png', '/highlights/juan-3114.jpg'],
   };
 
   const activitiesWithoutRemoved = activities.filter(
@@ -314,20 +314,14 @@ export function seedData() {
   const migratedActivities = activitiesWithoutRemoved.map((a) => {
     const media = mediaByActivityId[a.id];
     if (!media) return a;
-    if (a.id === 'act-7') {
-      const currentMedia = Array.isArray(a.media) ? a.media : [];
-      const hasLegacy =
-        currentMedia.length === 0 ||
-        currentMedia.some((src) => String(src).includes('victor-castillo-run.svg')) ||
-        currentMedia.some((src) => String(src).includes('victor-castillo-run.png')) ||
-        currentMedia.some((src) => String(src).includes('ducks images.heic'));
+    const currentMedia = Array.isArray(a.media) ? a.media : [];
+    const isSameSet =
+      currentMedia.length === media.length &&
+      currentMedia.every((src, i) => src === media[i]);
+    if (isSameSet) return a;
 
-      const isSameSet =
-        currentMedia.length === media.length &&
-        currentMedia.every((src, i) => src === media[i]);
-
-      const needsUpgrade = hasLegacy || !isSameSet;
-      if (!needsUpgrade) return a;
+    // For these seeded activities, keep media in sync even if localStorage already has data.
+    if (a.id === 'act-7' || a.id === 'act-10' || a.id === 'act-11' || a.id === 'act-12' || a.id === 'act-14') {
       changedActivities = true;
       return { ...a, media };
     }
