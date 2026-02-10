@@ -69,6 +69,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(3, 18, 45),
     location: 'Manhattan, New York',
     device: 'Garmin fēnix 5X Plus',
+    media: ['/feed/run.svg'],
   },
   {
     id: 'act-2',
@@ -83,6 +84,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(5, 7, 30),
     location: 'Central Park, New York',
     device: 'Garmin fēnix 5X Plus',
+    media: ['/feed/run.svg'],
   },
   {
     id: 'act-3',
@@ -97,6 +99,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(7, 6, 0),
     location: 'Manhattan, New York',
     device: 'Garmin fēnix 5X Plus',
+    media: ['/feed/run.svg'],
   },
   // Victor Castillo's activities
   {
@@ -112,6 +115,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(1, 16, 0),
     location: 'Prospect Park, Brooklyn',
     device: 'Apple Watch',
+    media: ['/feed/run.svg'],
   },
   {
     id: 'act-8',
@@ -126,6 +130,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(5, 9, 0),
     location: 'Bear Mountain, NY',
     device: 'Apple Watch',
+    media: ['/feed/hike.svg'],
   },
   {
     id: 'act-9',
@@ -140,6 +145,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(3, 12, 30),
     location: 'Downtown Brooklyn',
     device: 'Apple Watch',
+    media: ['/feed/walk.svg'],
   },
   // Juan Franco's activities
   {
@@ -201,6 +207,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(1, 6, 30),
     location: 'Chelsea Recreation Center, NYC',
     device: 'Apple Watch Ultra',
+    media: ['/feed/swim.svg'],
   },
   {
     id: 'act-13',
@@ -215,6 +222,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(4, 7, 0),
     location: 'Brooklyn Bridge, NYC',
     device: 'Apple Watch Ultra',
+    media: ['/feed/run.svg'],
   },
 ];
 
