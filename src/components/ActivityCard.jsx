@@ -29,15 +29,24 @@ function Avatar({ user, size = 'md' }) {
 
   return (
     <div
-      className={`${sizeClasses} rounded-full flex items-center justify-center text-white font-semibold shrink-0`}
+      className={`${sizeClasses} rounded-full flex items-center justify-center text-white font-semibold shrink-0 overflow-hidden`}
       style={{ backgroundColor: user?.profileColor || '#6D6D6D' }}
     >
-      {initials}
+      {user?.profilePhoto ? (
+        <img
+          src={user.profilePhoto}
+          alt=""
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+      ) : (
+        initials
+      )}
     </div>
   );
 }
 
-export default function ActivityCard({ activity }) {
+export default function ActivityCard({ activity, onSelectUser }) {
   const {
     getUserById,
     getActivityKudos,
@@ -67,15 +76,31 @@ export default function ActivityCard({ activity }) {
     setCommentText('');
   }
 
+  function handleSelectUser() {
+    if (!user) return;
+    onSelectUser?.(user);
+  }
+
   return (
     <div className="bg-white border-b border-strava-border">
       {/* Header: Avatar + User info + menu */}
       <div className="px-4 pt-4 flex items-start gap-3">
-        <Avatar user={user} />
+        <button
+          type="button"
+          onClick={handleSelectUser}
+          className="rounded-full focus:outline-none focus:ring-2 focus:ring-strava-orange/40"
+          aria-label={`View ${user?.username || 'athlete'} profile`}
+        >
+          <Avatar user={user} />
+        </button>
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-strava-dark text-sm leading-tight">
+          <button
+            type="button"
+            onClick={handleSelectUser}
+            className="font-semibold text-strava-dark text-sm leading-tight text-left hover:underline"
+          >
             {user?.username}
-          </p>
+          </button>
           <p className="text-xs text-strava-medium leading-tight mt-0.5">
             {dateStr}
             {activity.device && ` · ${activity.device}`}
@@ -102,6 +127,23 @@ export default function ActivityCard({ activity }) {
           <p className="text-sm text-strava-dark mt-1">{activity.description}</p>
         )}
       </div>
+
+      {/* Media */}
+      {Array.isArray(activity.media) && activity.media.length > 0 && (
+        <div className="px-4 mt-3">
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            {activity.media.map((src) => (
+              <img
+                key={src}
+                src={src}
+                alt="Activity media"
+                loading="lazy"
+                className="w-56 h-40 shrink-0 rounded-2xl object-cover border border-strava-border"
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Stats row */}
       <div className="px-4 mt-3 flex gap-8">

@@ -21,6 +21,67 @@ export function AppProvider({ children }) {
   // Initialize data on mount
   useEffect(() => {
     seedData();
+
+    // Safety net: purge deprecated demo content from old localStorage installs.
+    // (Some browsers can keep stale localStorage even after code changes/HMR.)
+    const removedUserIds = new Set(['user-3']);
+    const removedActivityIds = new Set(['act-4', 'act-5', 'act-6']);
+
+    const prevUsers = getUsers();
+    const nextUsers = prevUsers
+      .filter((u) => !removedUserIds.has(u.id))
+      .map((u) => {
+        const following = Array.isArray(u.following) ? u.following : [];
+        const nextFollowing = following.filter((id) => !removedUserIds.has(id));
+        if (nextFollowing.length === following.length) return u;
+        return { ...u, following: nextFollowing };
+      });
+    if (nextUsers.length !== prevUsers.length || nextUsers.some((u, i) => u !== prevUsers[i])) {
+      saveUsers(nextUsers);
+    }
+
+    const prevActivities = getActivities();
+    let activitiesChanged = false;
+    const nextActivities = prevActivities
+      .filter((a) => {
+        const keep = !removedUserIds.has(a.userId) && !removedActivityIds.has(a.id);
+        if (!keep) activitiesChanged = true;
+        return keep;
+      })
+      .map((a) => {
+        if (a.userId !== 'user-4' || !Array.isArray(a.media) || a.media.length === 0) return a;
+        const nextMedia = a.media.filter(
+          (src) => !['/highlights/juan-franco-1.png', '/highlights/juan-franco-2.png', '/highlights/juan-franco-3.png'].includes(src)
+        );
+        if (nextMedia.length === a.media.length) return a;
+        activitiesChanged = true;
+        return { ...a, media: nextMedia };
+      });
+    if (activitiesChanged) {
+      saveActivities(nextActivities);
+    }
+
+    const prevKudos = getKudos();
+    const nextKudos = prevKudos.filter(
+      (k) => !removedUserIds.has(k.userId) && !removedActivityIds.has(k.activityId)
+    );
+    if (nextKudos.length !== prevKudos.length) {
+      saveKudos(nextKudos);
+    }
+
+    const prevComments = getComments();
+    const nextComments = prevComments.filter(
+      (c) => !removedUserIds.has(c.userId) && !removedActivityIds.has(c.activityId)
+    );
+    if (nextComments.length !== prevComments.length) {
+      saveComments(nextComments);
+    }
+
+    const current = getCurrentUser();
+    if (current && removedUserIds.has(current.id)) {
+      saveCurrentUser({ id: 'user-1', username: 'Victor Castillo', isPremium: false });
+    }
+
     setUsers(getUsers());
     setActivities(getActivities());
     setKudos(getKudos());
@@ -90,6 +151,15 @@ export function AppProvider({ children }) {
     return users.find((u) => u.id === id);
   }
 
+  function setUserProfilePhoto(userId, profilePhoto) {
+    const updated = users.map((u) => {
+      if (u.id !== userId) return u;
+      return { ...u, profilePhoto: profilePhoto || null };
+    });
+    setUsers(updated);
+    saveUsers(updated);
+  }
+
   function getActivityKudos(activityId) {
     return kudos.filter((k) => k.activityId === activityId);
   }
@@ -123,6 +193,13 @@ export function AppProvider({ children }) {
       .sort((a, b) => b.timestamp - a.timestamp);
   }
 
+  function getActivitiesByUserId(userId) {
+    if (!userId) return [];
+    return activities
+      .filter((a) => a.userId === userId)
+      .sort((a, b) => b.timestamp - a.timestamp);
+  }
+
   function handleResetData() {
     resetData();
     setUsers(getUsers());
@@ -142,11 +219,13 @@ export function AppProvider({ children }) {
     toggleKudo,
     addComment,
     getUserById,
+    setUserProfilePhoto,
     getActivityKudos,
     getActivityComments,
     hasGivenKudo,
     getFeedActivities,
     getMyActivities,
+    getActivitiesByUserId,
     resetData: handleResetData,
   };
 
