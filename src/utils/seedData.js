@@ -112,7 +112,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(1, 16, 0),
     location: 'Prospect Park, Brooklyn',
     device: 'Apple Watch',
-    media: ['/highlights/victor-castillo-run.png'],
+    media: ['/highlights/ducks images.heic'],
   },
   {
     id: 'act-8',
@@ -290,7 +290,7 @@ export function seedData() {
   });
 
   const mediaByActivityId = {
-    'act-7': ['/highlights/victor-castillo-run.png'],
+    'act-7': ['/highlights/ducks images.heic'],
     'act-10': ['/highlights/juan-franco-1.png'],
     'act-11': ['/highlights/juan-franco-2.png'],
     'act-14': ['/highlights/juan-franco-3.png'],
@@ -308,7 +308,9 @@ export function seedData() {
       const currentMedia = Array.isArray(a.media) ? a.media : [];
       const needsUpgrade =
         currentMedia.length === 0 ||
-        currentMedia.some((src) => String(src).includes('victor-castillo-run.svg'));
+        currentMedia.some((src) => String(src).includes('victor-castillo-run.svg')) ||
+        currentMedia.some((src) => String(src).includes('victor-castillo-run.png')) ||
+        currentMedia.some((src) => String(src).includes('ducks images.heic'));
       if (!needsUpgrade) return a;
       changedActivities = true;
       return { ...a, media };
