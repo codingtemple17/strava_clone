@@ -5,6 +5,8 @@ import ActivityForm from './components/ActivityForm';
 import ActivityList from './components/ActivityList';
 import ProfileView from './components/ProfileView.jsx';
 import UserActivitiesView from './components/UserActivitiesView.jsx';
+import YouPage from './components/YouPage.jsx';
+import PremiumPage from './components/PremiumPage.jsx';
 import {
   Home,
   Map,
@@ -22,6 +24,7 @@ const TABS = {
   RECORD: 'record',
   GROUPS: 'groups',
   YOU: 'you',
+  PREMIUM: 'premium',
   PROFILE: 'profile',
   PROFILE_ACTIVITIES: 'profile_activities',
 };
@@ -151,7 +154,9 @@ export default function App() {
     <div className="bg-strava-light min-h-screen pb-20">
       {currentTab !== TABS.RECORD &&
         currentTab !== TABS.PROFILE &&
-        currentTab !== TABS.PROFILE_ACTIVITIES && (
+        currentTab !== TABS.PROFILE_ACTIVITIES &&
+        currentTab !== TABS.YOU &&
+        currentTab !== TABS.PREMIUM && (
         <Header currentTab={currentTab} />
       )}
 
@@ -177,7 +182,12 @@ export default function App() {
             description="Group challenges coming soon. Stay tuned!"
           />
         )}
-        {currentTab === TABS.YOU && <ActivityList />}
+        {currentTab === TABS.YOU && (
+          <YouPage onNavigateToPremium={() => handleTabChange(TABS.PREMIUM)} />
+        )}
+        {currentTab === TABS.PREMIUM && (
+          <PremiumPage onClose={() => handleTabChange(TABS.YOU)} />
+        )}
         {currentTab === TABS.PROFILE && (
           <ProfileView
             userId={profileUserId}
@@ -193,7 +203,9 @@ export default function App() {
         )}
       </main>
 
-      <BottomNav currentTab={currentTab} setTab={handleTabChange} />
+      {currentTab !== TABS.PREMIUM && (
+        <BottomNav currentTab={currentTab} setTab={handleTabChange} />
+      )}
     </div>
   );
 }
