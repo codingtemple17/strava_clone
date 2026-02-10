@@ -206,6 +206,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(1, 6, 30),
     location: 'Chelsea Recreation Center, NYC',
     device: 'Apple Watch Ultra',
+    media: ['/highlights/sarah-swimming-1.png'],
   },
   {
     id: 'act-13',
@@ -299,6 +300,7 @@ export function seedData() {
       '/highlights/victor-8364.jpg',
       '/highlights/victor-7641.jpg',
     ],
+    'act-12': ['/highlights/sarah-swimming-1.png'],
     'act-10': ['/highlights/juan-franco-1.png'],
     'act-11': ['/highlights/juan-franco-2.png'],
     'act-14': ['/highlights/juan-franco-3.png'],
