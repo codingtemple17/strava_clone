@@ -1,7 +1,7 @@
 import { useApp } from '../context/AppContext';
 import ActivityCard from './ActivityCard';
 
-export default function ActivityFeed() {
+export default function ActivityFeed({ onSelectUser }) {
   const { getFeedActivities } = useApp();
   const activities = getFeedActivities();
 
@@ -20,7 +20,11 @@ export default function ActivityFeed() {
   return (
     <div>
       {activities.map((activity) => (
-        <ActivityCard key={activity.id} activity={activity} />
+        <ActivityCard
+          key={activity.id}
+          activity={activity}
+          onSelectUser={onSelectUser}
+        />
       ))}
     </div>
   );

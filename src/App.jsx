@@ -3,6 +3,8 @@ import { useApp } from './context/AppContext';
 import ActivityFeed from './components/ActivityFeed';
 import ActivityForm from './components/ActivityForm';
 import ActivityList from './components/ActivityList';
+import ProfileView from './components/ProfileView.jsx';
+import UserActivitiesView from './components/UserActivitiesView.jsx';
 import {
   Home,
   Map,
@@ -20,6 +22,8 @@ const TABS = {
   RECORD: 'record',
   GROUPS: 'groups',
   YOU: 'you',
+  PROFILE: 'profile',
+  PROFILE_ACTIVITIES: 'profile_activities',
 };
 
 function Header({ currentTab }) {
@@ -65,6 +69,7 @@ function Header({ currentTab }) {
 }
 
 function BottomNav({ currentTab, setTab }) {
+  const navTab = currentTab === TABS.PROFILE ? TABS.YOU : currentTab;
   const navItems = [
     { id: TABS.HOME, icon: Home, label: 'Home' },
     { id: TABS.MAPS, icon: Map, label: 'Maps' },
@@ -77,7 +82,7 @@ function BottomNav({ currentTab, setTab }) {
     <nav className="bg-white border-t border-strava-border fixed bottom-0 left-0 right-0 z-20">
       <div className="max-w-lg mx-auto flex items-center justify-around py-1.5">
         {navItems.map(({ id, icon: Icon, label, isRecord }) => {
-          const isActive = currentTab === id;
+          const isActive = navTab === id;
 
           if (isRecord) {
             return (
@@ -124,6 +129,19 @@ function PlaceholderTab({ title, description }) {
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState(TABS.HOME);
+  const [profileUserId, setProfileUserId] = useState(null);
+
+  function openProfile(userId) {
+    setProfileUserId(userId);
+    setCurrentTab(TABS.PROFILE);
+  }
+
+  function handleTabChange(nextTab) {
+    setCurrentTab(nextTab);
+    if (nextTab !== TABS.PROFILE && nextTab !== TABS.PROFILE_ACTIVITIES) {
+      setProfileUserId(null);
+    }
+  }
 
   function handleRecordSuccess() {
     setCurrentTab(TABS.HOME);
@@ -131,10 +149,16 @@ export default function App() {
 
   return (
     <div className="bg-strava-light min-h-screen pb-20">
-      {currentTab !== TABS.RECORD && <Header currentTab={currentTab} />}
+      {currentTab !== TABS.RECORD &&
+        currentTab !== TABS.PROFILE &&
+        currentTab !== TABS.PROFILE_ACTIVITIES && (
+        <Header currentTab={currentTab} />
+      )}
 
       <main className="max-w-lg mx-auto">
-        {currentTab === TABS.HOME && <ActivityFeed />}
+        {currentTab === TABS.HOME && (
+          <ActivityFeed onSelectUser={(user) => openProfile(user?.id)} />
+        )}
         {currentTab === TABS.MAPS && (
           <PlaceholderTab
             title="Maps"
@@ -154,9 +178,22 @@ export default function App() {
           />
         )}
         {currentTab === TABS.YOU && <ActivityList />}
+        {currentTab === TABS.PROFILE && (
+          <ProfileView
+            userId={profileUserId}
+            onBack={() => handleTabChange(TABS.HOME)}
+            onOpenActivities={() => handleTabChange(TABS.PROFILE_ACTIVITIES)}
+          />
+        )}
+        {currentTab === TABS.PROFILE_ACTIVITIES && (
+          <UserActivitiesView
+            userId={profileUserId}
+            onBack={() => handleTabChange(TABS.PROFILE)}
+          />
+        )}
       </main>
 
-      <BottomNav currentTab={currentTab} setTab={setCurrentTab} />
+      <BottomNav currentTab={currentTab} setTab={handleTabChange} />
     </div>
   );
 }

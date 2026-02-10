@@ -1,4 +1,15 @@
-import { setUsers, setActivities, setKudos, setComments, setCurrentUser, getUsers } from './localStorage.js';
+import {
+  setUsers,
+  setActivities,
+  setKudos,
+  setComments,
+  setCurrentUser,
+  getUsers,
+  getActivities,
+  getKudos,
+  getComments,
+  getCurrentUser,
+} from './localStorage.js';
 
 const USERS = [
   {
@@ -6,7 +17,7 @@ const USERS = [
     username: 'Victor Castillo',
     bio: 'Runner & developer. Building cool things at Pursuit.',
     profileColor: '#FC4C02',
-    following: ['user-2', 'user-3', 'user-4', 'user-5'],
+    following: ['user-2', 'user-4', 'user-5'],
     isPremium: false,
   },
   {
@@ -14,31 +25,24 @@ const USERS = [
     username: 'René Ugarte',
     bio: 'FRNY coached runner. Manhattan miles.',
     profileColor: '#4A90D9',
-    following: ['user-1', 'user-3'],
+    following: ['user-1'],
     isPremium: false,
   },
   {
-    id: 'user-3',
-    username: 'Jason Farrell',
-    bio: 'Tempo runs and trail adventures in Queens.',
-    profileColor: '#E74C3C',
-    following: ['user-1', 'user-2', 'user-4'],
-    isPremium: true,
-  },
-  {
     id: 'user-4',
-    username: 'Juan Franco',
+    username: 'Juan Carlos Franco',
     bio: 'Co-builder of this app. Cyclist and hiker.',
     profileColor: '#2ECC71',
     following: ['user-1', 'user-5'],
     isPremium: false,
+    profilePhoto: '/highlights/juan-franco-1.png',
   },
   {
     id: 'user-5',
     username: 'Sarah Chen',
     bio: 'Swimming and yoga enthusiast. NYC life.',
     profileColor: '#9B59B6',
-    following: ['user-1', 'user-2', 'user-3'],
+    following: ['user-1', 'user-2'],
     isPremium: false,
   },
 ];
@@ -93,49 +97,6 @@ const ACTIVITIES = [
     timestamp: daysAgo(7, 6, 0),
     location: 'Manhattan, New York',
     device: 'Garmin fēnix 5X Plus',
-  },
-  // Jason Farrell's activities
-  {
-    id: 'act-4',
-    userId: 'user-3',
-    title: 'short tempo',
-    description: '',
-    type: 'Run',
-    distance: 3.16,
-    distanceUnit: 'mi',
-    duration: 1619, // 26m 59s
-    date: daysAgo(2, 8, 7),
-    timestamp: daysAgo(2, 8, 7),
-    location: 'Queens, New York',
-    device: 'COROS APEX 2 Pro',
-  },
-  {
-    id: 'act-5',
-    userId: 'user-3',
-    title: 'Fartlek Friday',
-    description: 'Speed intervals through the park. Legs are feeling it.',
-    type: 'Run',
-    distance: 5.0,
-    distanceUnit: 'mi',
-    duration: 2400, // 40m
-    date: daysAgo(4, 17, 30),
-    timestamp: daysAgo(4, 17, 30),
-    location: 'Queens, New York',
-    device: 'COROS APEX 2 Pro',
-  },
-  {
-    id: 'act-6',
-    userId: 'user-3',
-    title: 'Morning ride to work',
-    description: 'Perfect weather for a bike commute.',
-    type: 'Ride',
-    distance: 8.5,
-    distanceUnit: 'mi',
-    duration: 1800, // 30m
-    date: daysAgo(6, 7, 0),
-    timestamp: daysAgo(6, 7, 0),
-    location: 'Queens, New York',
-    device: 'COROS APEX 2 Pro',
   },
   // Victor Castillo's activities
   {
@@ -194,6 +155,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(2, 10, 0),
     location: 'Hudson River Greenway, NYC',
     device: 'Garmin Edge 530',
+    media: ['/highlights/juan-franco-1.png'],
   },
   {
     id: 'act-11',
@@ -208,6 +170,22 @@ const ACTIVITIES = [
     timestamp: daysAgo(6, 8, 0),
     location: 'Harriman State Park, NY',
     device: 'Garmin Edge 530',
+    media: ['/highlights/juan-franco-2.png'],
+  },
+  {
+    id: 'act-14',
+    userId: 'user-4',
+    title: 'Alley Pond trail run',
+    description: 'Easy trail miles and good vibes.',
+    type: 'Run',
+    distance: 4.2,
+    distanceUnit: 'mi',
+    duration: 2520, // 42m
+    date: daysAgo(9, 7, 15),
+    timestamp: daysAgo(9, 7, 15),
+    location: 'Queens, New York',
+    device: 'Apple Watch',
+    media: ['/highlights/juan-franco-3.png'],
   },
   // Sarah Chen's activities
   {
@@ -242,18 +220,11 @@ const ACTIVITIES = [
 
 const KUDOS = [
   { id: 'k-1', activityId: 'act-1', userId: 'user-1', timestamp: daysAgo(3, 19, 0) },
-  { id: 'k-2', activityId: 'act-1', userId: 'user-3', timestamp: daysAgo(3, 19, 30) },
   { id: 'k-3', activityId: 'act-1', userId: 'user-5', timestamp: daysAgo(3, 20, 0) },
-  { id: 'k-4', activityId: 'act-4', userId: 'user-1', timestamp: daysAgo(2, 9, 0) },
-  { id: 'k-5', activityId: 'act-4', userId: 'user-2', timestamp: daysAgo(2, 10, 0) },
   { id: 'k-6', activityId: 'act-7', userId: 'user-2', timestamp: daysAgo(1, 17, 0) },
   { id: 'k-7', activityId: 'act-7', userId: 'user-4', timestamp: daysAgo(1, 17, 30) },
-  { id: 'k-8', activityId: 'act-7', userId: 'user-3', timestamp: daysAgo(1, 18, 0) },
   { id: 'k-9', activityId: 'act-10', userId: 'user-1', timestamp: daysAgo(2, 11, 0) },
   { id: 'k-10', activityId: 'act-12', userId: 'user-1', timestamp: daysAgo(1, 7, 0) },
-  { id: 'k-11', activityId: 'act-12', userId: 'user-3', timestamp: daysAgo(1, 8, 0) },
-  { id: 'k-12', activityId: 'act-5', userId: 'user-1', timestamp: daysAgo(4, 18, 0) },
-  { id: 'k-13', activityId: 'act-5', userId: 'user-5', timestamp: daysAgo(4, 19, 0) },
   { id: 'k-14', activityId: 'act-8', userId: 'user-4', timestamp: daysAgo(5, 12, 0) },
   { id: 'k-15', activityId: 'act-13', userId: 'user-2', timestamp: daysAgo(4, 9, 0) },
   { id: 'k-16', activityId: 'act-13', userId: 'user-1', timestamp: daysAgo(4, 10, 0) },
@@ -261,22 +232,125 @@ const KUDOS = [
 
 const COMMENTS = [
   { id: 'c-1', activityId: 'act-1', userId: 'user-1', text: 'Great pace René! Those coaches are making a difference.', timestamp: daysAgo(3, 20, 0) },
-  { id: 'c-2', activityId: 'act-1', userId: 'user-3', text: 'Solid workout! 💪', timestamp: daysAgo(3, 20, 30) },
-  { id: 'c-3', activityId: 'act-4', userId: 'user-2', text: 'Nice tempo! Keep it up Jason.', timestamp: daysAgo(2, 10, 30) },
   { id: 'c-4', activityId: 'act-7', userId: 'user-4', text: 'Prospect Park is the best for afternoon runs!', timestamp: daysAgo(1, 18, 0) },
   { id: 'c-5', activityId: 'act-10', userId: 'user-1', text: 'That headwind is no joke lol', timestamp: daysAgo(2, 12, 0) },
   { id: 'c-6', activityId: 'act-13', userId: 'user-1', text: 'Tourist dodge level 😂 so real', timestamp: daysAgo(4, 11, 0) },
 ];
 
 export function seedData() {
-  // Only seed if no data exists
-  if (getUsers().length > 0) return;
+  // Seed if empty; otherwise migrate existing data for new fields/content.
+  if (getUsers().length === 0) {
+    setUsers(USERS);
+    setActivities(ACTIVITIES);
+    setKudos(KUDOS);
+    setComments(COMMENTS);
+    setCurrentUser({ id: 'user-1', username: 'Victor Castillo', isPremium: false });
+    return;
+  }
 
-  setUsers(USERS);
-  setActivities(ACTIVITIES);
-  setKudos(KUDOS);
-  setComments(COMMENTS);
-  setCurrentUser({ id: 'user-1', username: 'Victor Castillo', isPremium: false });
+  // Migration: ensure Juan's official profile name + seeded media exist.
+  const users = getUsers();
+  const activities = getActivities();
+  const kudos = getKudos();
+  const comments = getComments();
+
+  const removedUserIds = new Set(['user-3']);
+  const removedActivityIds = new Set(['act-4', 'act-5', 'act-6']);
+
+  let changedUsers = false;
+  let changedActivities = false;
+  let changedKudos = false;
+  let changedComments = false;
+
+  // Purge removed users + references.
+  const usersWithoutRemoved = users.filter((u) => !removedUserIds.has(u.id));
+  if (usersWithoutRemoved.length !== users.length) changedUsers = true;
+
+  const migratedUsers = usersWithoutRemoved.map((u) => {
+    // Remove user-3 from any following arrays.
+    const following = Array.isArray(u.following) ? u.following : [];
+    const nextFollowing = following.filter((id) => !removedUserIds.has(id));
+    let nextUser = nextFollowing.length !== following.length ? { ...u, following: nextFollowing } : u;
+    if (nextUser !== u) changedUsers = true;
+
+    if (nextUser.id === 'user-4') {
+      const needsName = u.username !== 'Juan Carlos Franco';
+      const needsPhoto = !u.profilePhoto;
+      if (!needsName && !needsPhoto) return u;
+      changedUsers = true;
+      return {
+        ...nextUser,
+        username: 'Juan Carlos Franco',
+        profilePhoto: u.profilePhoto || '/highlights/juan-franco-1.png',
+      };
+    }
+
+    return nextUser;
+  });
+
+  const mediaByActivityId = {
+    'act-10': ['/highlights/juan-franco-1.png'],
+    'act-11': ['/highlights/juan-franco-2.png'],
+    'act-14': ['/highlights/juan-franco-3.png'],
+  };
+
+  const activitiesWithoutRemoved = activities.filter(
+    (a) => !removedUserIds.has(a.userId) && !removedActivityIds.has(a.id)
+  );
+  if (activitiesWithoutRemoved.length !== activities.length) changedActivities = true;
+
+  const migratedActivities = activitiesWithoutRemoved.map((a) => {
+    const media = mediaByActivityId[a.id];
+    if (!media) return a;
+    if (Array.isArray(a.media) && a.media.length > 0) return a;
+    changedActivities = true;
+    return { ...a, media };
+  });
+
+  const hasAct14 = migratedActivities.some((a) => a.id === 'act-14');
+  const shouldAddAct14 = !hasAct14;
+  const finalActivities = shouldAddAct14
+    ? [
+        ...migratedActivities,
+        {
+          id: 'act-14',
+          userId: 'user-4',
+          title: 'Alley Pond trail run',
+          description: 'Easy trail miles and good vibes.',
+          type: 'Run',
+          distance: 4.2,
+          distanceUnit: 'mi',
+          duration: 2520, // 42m
+          date: daysAgo(9, 7, 15),
+          timestamp: daysAgo(9, 7, 15),
+          location: 'Queens, New York',
+          device: 'Apple Watch',
+          media: ['/highlights/juan-franco-3.png'],
+        },
+      ]
+    : migratedActivities;
+
+  if (shouldAddAct14) changedActivities = true;
+
+  if (changedUsers) setUsers(migratedUsers);
+  if (changedActivities) setActivities(finalActivities);
+
+  const kudosWithoutRemoved = kudos.filter(
+    (k) => !removedUserIds.has(k.userId) && !removedActivityIds.has(k.activityId)
+  );
+  if (kudosWithoutRemoved.length !== kudos.length) changedKudos = true;
+  if (changedKudos) setKudos(kudosWithoutRemoved);
+
+  const commentsWithoutRemoved = comments.filter(
+    (c) => !removedUserIds.has(c.userId) && !removedActivityIds.has(c.activityId)
+  );
+  if (commentsWithoutRemoved.length !== comments.length) changedComments = true;
+  if (changedComments) setComments(commentsWithoutRemoved);
+
+  const currentUser = getCurrentUser();
+  if (currentUser && removedUserIds.has(currentUser.id)) {
+    setCurrentUser({ id: 'user-1', username: 'Victor Castillo', isPremium: false });
+  }
 }
 
 export function resetData() {
