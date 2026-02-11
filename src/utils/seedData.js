@@ -69,6 +69,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(3, 18, 45),
     location: 'Manhattan, New York',
     device: 'Garmin fēnix 5X Plus',
+    media: ['/highlights/rene-jersey.png', '/highlights/rene-ice-1.png', '/highlights/rene-ice-2.png'],
   },
   {
     id: 'act-2',
@@ -112,6 +113,11 @@ const ACTIVITIES = [
     timestamp: daysAgo(1, 16, 0),
     location: 'Prospect Park, Brooklyn',
     device: 'Apple Watch',
+    media: [
+      '/highlights/ducks-images.jpg',
+      '/highlights/victor-8364.jpg',
+      '/highlights/victor-7641.jpg',
+    ],
   },
   {
     id: 'act-8',
@@ -140,6 +146,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(3, 12, 30),
     location: 'Downtown Brooklyn',
     device: 'Apple Watch',
+    media: ['/highlights/juan-4779.jpg', '/highlights/victor-7641.jpg', '/highlights/victor-9901.jpg'],
   },
   // Juan Franco's activities
   {
@@ -155,7 +162,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(2, 10, 0),
     location: 'Hudson River Greenway, NYC',
     device: 'Garmin Edge 530',
-    media: ['/highlights/juan-franco-1.png'],
+    media: ['/highlights/juan-franco-1.png', '/highlights/juan-4779.jpg'],
   },
   {
     id: 'act-11',
@@ -170,7 +177,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(6, 8, 0),
     location: 'Harriman State Park, NY',
     device: 'Garmin Edge 530',
-    media: ['/highlights/juan-franco-2.png'],
+    media: ['/highlights/juan-franco-2.png', '/highlights/juan-4760.jpg'],
   },
   {
     id: 'act-14',
@@ -185,7 +192,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(9, 7, 15),
     location: 'Queens, New York',
     device: 'Apple Watch',
-    media: ['/highlights/juan-franco-3.png'],
+    media: ['/highlights/juan-franco-3.png', '/highlights/juan-3114.jpg'],
   },
   // Sarah Chen's activities
   {
@@ -201,6 +208,7 @@ const ACTIVITIES = [
     timestamp: daysAgo(1, 6, 30),
     location: 'Chelsea Recreation Center, NYC',
     device: 'Apple Watch Ultra',
+    media: ['/highlights/sarah-swimming-1.png'],
   },
   {
     id: 'act-13',
@@ -289,9 +297,17 @@ export function seedData() {
   });
 
   const mediaByActivityId = {
-    'act-10': ['/highlights/juan-franco-1.png'],
-    'act-11': ['/highlights/juan-franco-2.png'],
-    'act-14': ['/highlights/juan-franco-3.png'],
+    'act-1': ['/highlights/rene-jersey.png', '/highlights/rene-ice-1.png', '/highlights/rene-ice-2.png'],
+    'act-7': [
+      '/highlights/ducks-images.jpg',
+      '/highlights/victor-8364.jpg',
+      '/highlights/victor-7641.jpg',
+    ],
+    'act-9': ['/highlights/juan-4779.jpg', '/highlights/victor-7641.jpg', '/highlights/victor-9901.jpg'],
+    'act-12': ['/highlights/sarah-swimming-1.png'],
+    'act-10': ['/highlights/juan-franco-1.png', '/highlights/juan-4779.jpg'],
+    'act-11': ['/highlights/juan-franco-2.png', '/highlights/juan-4760.jpg'],
+    'act-14': ['/highlights/juan-franco-3.png', '/highlights/juan-3114.jpg'],
   };
 
   const activitiesWithoutRemoved = activities.filter(
@@ -302,6 +318,26 @@ export function seedData() {
   const migratedActivities = activitiesWithoutRemoved.map((a) => {
     const media = mediaByActivityId[a.id];
     if (!media) return a;
+    const currentMedia = Array.isArray(a.media) ? a.media : [];
+    const isSameSet =
+      currentMedia.length === media.length &&
+      currentMedia.every((src, i) => src === media[i]);
+    if (isSameSet) return a;
+
+    // For these seeded activities, keep media in sync even if localStorage already has data.
+    if (
+      a.id === 'act-1' ||
+      a.id === 'act-7' ||
+      a.id === 'act-9' ||
+      a.id === 'act-10' ||
+      a.id === 'act-11' ||
+      a.id === 'act-12' ||
+      a.id === 'act-14'
+    ) {
+      changedActivities = true;
+      return { ...a, media };
+    }
+
     if (Array.isArray(a.media) && a.media.length > 0) return a;
     changedActivities = true;
     return { ...a, media };
