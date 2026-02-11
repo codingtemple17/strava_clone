@@ -1,6 +1,10 @@
 import { X, MapPin, Target, TrendingUp, Award, Calendar } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 
 export default function PremiumPage({ onClose }) {
+  const { currentUser, setCurrentUserPremium } = useApp();
+  const isPremium = Boolean(currentUser?.isPremium);
+
   return (
     <div className="bg-white min-h-screen">
       {/* Header with gradient background */}
@@ -124,8 +128,11 @@ export default function PremiumPage({ onClose }) {
 
       {/* Bottom CTA */}
       <div className="bg-white border-t border-strava-border px-6 py-4">
-        <button className="w-full bg-strava-orange text-white font-bold py-4 rounded-lg mb-2 hover:bg-orange-600 transition-colors">
-          Subscribe Annually
+        <button
+          onClick={() => setCurrentUserPremium(!isPremium)}
+          className="w-full bg-strava-orange text-white font-bold py-4 rounded-lg mb-2 hover:bg-orange-600 transition-colors"
+        >
+          {isPremium ? 'Premium Active (Demo)' : 'Subscribe Annually (Demo)'}
         </button>
         <p className="text-center text-xs text-strava-medium">
           Recurring billing. Cancel anytime.

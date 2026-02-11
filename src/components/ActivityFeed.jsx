@@ -1,7 +1,7 @@
 import { useApp } from '../context/AppContext';
 import ActivityCard from './ActivityCard';
 
-export default function ActivityFeed({ onSelectUser }) {
+export default function ActivityFeed({ onSelectUser, onNavigateToPremium }) {
   const { getFeedActivities } = useApp();
   const activities = getFeedActivities();
 
@@ -24,6 +24,7 @@ export default function ActivityFeed({ onSelectUser }) {
           key={activity.id}
           activity={activity}
           onSelectUser={onSelectUser}
+          onNavigateToPremium={onNavigateToPremium}
         />
       ))}
     </div>

@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { calculatePace, formatDuration, formatDate } from '../utils/calculations';
+import FlyoverPreview from './FlyoverPreview.jsx';
+import FlyoverModal from './FlyoverModal.jsx';
 import {
   MapPin,
   MoreHorizontal,
+  Lock,
   ThumbsUp,
   MessageCircle,
   Share2,
@@ -46,7 +49,7 @@ function Avatar({ user, size = 'md' }) {
   );
 }
 
-export default function ActivityCard({ activity, onSelectUser }) {
+export default function ActivityCard({ activity, onSelectUser, onNavigateToPremium }) {
   const {
     getUserById,
     getActivityKudos,
@@ -59,6 +62,7 @@ export default function ActivityCard({ activity, onSelectUser }) {
 
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
+  const [showFlyover, setShowFlyover] = useState(false);
 
   const user = getUserById(activity.userId);
   const activityKudos = getActivityKudos(activity.id);
@@ -68,6 +72,10 @@ export default function ActivityCard({ activity, onSelectUser }) {
   const duration = formatDuration(activity.duration);
   const dateStr = formatDate(activity.timestamp);
   const paceUnit = `/${activity.distanceUnit}`;
+
+  const canHaveFlyover =
+    ['Run', 'Ride', 'Hike', 'Walk'].includes(activity.type) && Boolean(activity.location);
+  const isPremium = Boolean(currentUser?.isPremium);
 
   function handleComment(e) {
     e.preventDefault();
@@ -150,6 +158,68 @@ export default function ActivityCard({ activity, onSelectUser }) {
               />
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Flyover (Premium) */}
+      {canHaveFlyover && (
+        <div className="px-4 mt-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <p className="text-[11px] text-strava-medium uppercase tracking-wide">Flyover</p>
+              <span className="text-[10px] font-bold text-strava-orange bg-orange-50 px-1.5 py-0.5 rounded">
+                PREMIUM
+              </span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowFlyover(true)}
+            className="mt-2 w-full rounded-2xl border border-strava-border overflow-hidden text-left focus:outline-none focus:ring-2 focus:ring-strava-orange/40"
+            aria-label="Watch Flyover"
+          >
+            <div className="relative">
+              <div className="h-44">
+                <FlyoverPreview activityId={activity.id} className="h-full" />
+              </div>
+
+              {!isPremium && (
+                <div className="absolute inset-0 bg-black/35 flex items-center justify-center">
+                  <div className="bg-white/95 border border-strava-border rounded-full px-3 py-2 flex items-center gap-2">
+                    <Lock size={16} className="text-strava-medium" />
+                    <span className="text-sm font-semibold text-strava-dark">Unlock Flyover</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="px-3 py-2 flex items-center justify-between">
+              <p className="text-sm font-semibold text-strava-dark">
+                {isPremium ? 'Watch Flyover' : 'Go Premium to watch'}
+              </p>
+              {!isPremium && (
+                <span className="text-sm font-semibold text-strava-orange">Go Premium</span>
+              )}
+            </div>
+          </button>
+
+          <FlyoverModal
+            open={showFlyover}
+            onClose={() => setShowFlyover(false)}
+            activityId={activity.id}
+            isPremium={isPremium}
+          />
+
+          {!isPremium && (
+            <button
+              type="button"
+              onClick={() => onNavigateToPremium?.()}
+              className="mt-2 w-full text-sm font-semibold text-strava-orange border border-strava-orange/30 bg-orange-50 rounded-xl py-2"
+            >
+              See Premium options
+            </button>
+          )}
         </div>
       )}
 

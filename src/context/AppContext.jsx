@@ -209,12 +209,28 @@ export function AppProvider({ children }) {
     setCurrentUser(getCurrentUser());
   }
 
+  function setCurrentUserPremium(isPremium) {
+    if (!currentUser) return;
+
+    const nextCurrentUser = { ...currentUser, isPremium: Boolean(isPremium) };
+    setCurrentUser(nextCurrentUser);
+    saveCurrentUser(nextCurrentUser);
+
+    const nextUsers = users.map((u) => {
+      if (u.id !== currentUser.id) return u;
+      return { ...u, isPremium: Boolean(isPremium) };
+    });
+    setUsers(nextUsers);
+    saveUsers(nextUsers);
+  }
+
   const value = {
     users,
     activities,
     kudos,
     comments,
     currentUser,
+    setCurrentUserPremium,
     addActivity,
     toggleKudo,
     addComment,

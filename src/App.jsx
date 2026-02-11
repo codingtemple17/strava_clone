@@ -162,7 +162,10 @@ export default function App() {
 
       <main className="max-w-lg mx-auto">
         {currentTab === TABS.HOME && (
-          <ActivityFeed onSelectUser={(user) => openProfile(user?.id)} />
+          <ActivityFeed
+            onSelectUser={(user) => openProfile(user?.id)}
+            onNavigateToPremium={() => handleTabChange(TABS.PREMIUM)}
+          />
         )}
         {currentTab === TABS.MAPS && (
           <PlaceholderTab
