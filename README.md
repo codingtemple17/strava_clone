@@ -2,7 +2,7 @@
 
 > **Project Owners:** Victor Castillo & Juan Franco
 > **Date:** February 8, 2026
-> **Live Demo:** [Your Netlify/Vercel URL]
+> **Live Demo:** [stravaclone-rust.vercel.app](https://stravaclone-rust.vercel.app/)
 
 A freemium social fitness platform inspired by Strava, where users can log workouts, share activities with friends, and stay motivated through community engagement. Built to demonstrate a viable freemium business model with strategic premium feature placement.
 
